@@ -4,6 +4,7 @@ import com.ktech.a2zschool.model.Holiday;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Arrays;
 import java.util.List;
@@ -12,7 +13,11 @@ import java.util.stream.Collectors;
 @Controller
 public class HolidayController {
     @GetMapping("/holidays")
-    public String displayHolidays(Model model) {
+    public String displayHolidays(@RequestParam(required = false)boolean festival,
+                                  @RequestParam(required=false) boolean federal,
+                                  Model model) {
+        model.addAttribute("festival",festival);
+        model.addAttribute("federal",federal);
         List<com.ktech.a2zschool.model.Holiday> holidays = Arrays.asList(
                 new com.ktech.a2zschool.model.Holiday(" Jan 1 ","New Year's Day", com.ktech.a2zschool.model.Holiday.Type.FESTIVAL),
                 new com.ktech.a2zschool.model.Holiday(" Nov 24 ","Thanksgiving Day", com.ktech.a2zschool.model.Holiday.Type.FESTIVAL),
