@@ -12,7 +12,7 @@ public class ProjectSecurityConfig {
     @Bean
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
 //        Custom security requests inside the Web Application
-        http.authorizeHttpRequests((requests) -> requests
+        http.csrf((csrf)->csrf.disable()).authorizeHttpRequests((requests) -> requests
                         .requestMatchers("/","/home").permitAll()
                         .requestMatchers("/contact").permitAll()
                         .requestMatchers("/saveMsg").permitAll()
