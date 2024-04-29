@@ -15,6 +15,11 @@ public class ProjectSecurityConfig {
         http.authorizeHttpRequests((requests) -> requests.anyRequest().permitAll())
                 .formLogin(withDefaults())
                 .httpBasic(withDefaults());
+
+//      Deny all requests inside the Web Application
+//        http.authorizeHttpRequests((requests) -> requests.anyRequest().denyAll())
+//                .formLogin(withDefaults())
+//                .httpBasic(withDefaults());
         return http.build();
     }
 }
