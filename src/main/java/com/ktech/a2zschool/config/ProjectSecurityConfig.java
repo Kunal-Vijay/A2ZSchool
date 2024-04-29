@@ -11,8 +11,17 @@ import static org.springframework.security.config.Customizer.withDefaults;
 public class ProjectSecurityConfig {
     @Bean
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
-//        Permits all requests inside the Web Application
-        http.authorizeHttpRequests((requests) -> requests.anyRequest().permitAll())
+//        Custom security requests inside the Web Application
+        http.authorizeHttpRequests((requests) -> requests
+                        .requestMatchers("/","/home").permitAll()
+                        .requestMatchers("/contact").permitAll()
+                        .requestMatchers("/saveMsg").permitAll()
+//                        .requestMatchers("/courses").authenticated()
+                        .requestMatchers("/courses").permitAll()
+                        .requestMatchers("/about").permitAll()
+                        .requestMatchers("/assets/**").permitAll()
+                        .requestMatchers("/holidays/**").permitAll())
+
                 .formLogin(withDefaults())
                 .httpBasic(withDefaults());
 
