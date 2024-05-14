@@ -35,4 +35,13 @@ public class ContactService {
         List<Contact> contactMsgs = contactRepository.findMsgsWithStatus(A2ZSchoolContants.OPEN);
         return contactMsgs;
     }
+
+    public boolean updateMsgStatus(int contactId,String updatedBy){
+        boolean isUpdated = false;
+        int result = contactRepository.updateMsgStatus(contactId,A2ZSchoolContants.CLOSE,updatedBy);
+        if(result>0){
+            isUpdated=true;
+        }
+        return isUpdated;
+    }
 }
