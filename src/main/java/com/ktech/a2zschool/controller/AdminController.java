@@ -1,20 +1,56 @@
 package com.ktech.a2zschool.controller;
 
+import com.ktech.a2zschool.model.Person;
 import com.ktech.a2zschool.model.SchoolClass;
+import com.ktech.a2zschool.repository.PersonRepository;
+import com.ktech.a2zschool.repository.SchoolClassRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Controller
 @RequestMapping("admin")
 public class AdminController {
+    @Autowired
+    SchoolClassRepository schoolClassRepository;
+
+    @Autowired
+    PersonRepository personRepository;
+
     @RequestMapping("/displayClasses")
     public ModelAndView displayClasses(Model model) {
+        List<SchoolClass> schoolClasses = schoolClassRepository.findAll();
         ModelAndView modelAndView = new ModelAndView("classes.html");
-        modelAndView.addObject("eazyClass",new SchoolClass());
+        modelAndView.addObject("schoolClasses",schoolClasses);
+        modelAndView.addObject("schoolClass",new SchoolClass());
         return modelAndView;
     }
+    @PostMapping("/addNewClass")
+    public ModelAndView addNewClass(Model model, @ModelAttribute("schoolClass") SchoolClass schoolClass) {
+        schoolClassRepository.save(schoolClass);
+        ModelAndView modelAndView = new ModelAndView("redirect:/admin/displayClasses");
+        return modelAndView;
+    }
+    @RequestMapping("/deleteClass")
+    public ModelAndView deleteClass(Model model, @RequestParam int id) {
+        Optional<SchoolClass> schoolClass = schoolClassRepository.findById(id);
+        for(Person person : schoolClass.get().getPersons()){
+            person.setSchoolClass(null);
+            personRepository.save(person);
+        }
+        schoolClassRepository.deleteById(id);
+        ModelAndView modelAndView = new ModelAndView("redirect:/admin/displayClasses");
+        return modelAndView;
+    }
+
 }
