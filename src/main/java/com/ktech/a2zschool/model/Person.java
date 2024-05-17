@@ -12,6 +12,9 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Getter
 @Setter
 @Entity
@@ -72,4 +75,12 @@ public class Person extends BaseEntity{
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "class_id", referencedColumnName = "classId", nullable = true)
     private SchoolClass schoolClass;
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @JoinTable(name = "person_courses",
+            joinColumns = {
+                    @JoinColumn(name = "person_id", referencedColumnName = "personId")},
+            inverseJoinColumns = {
+                    @JoinColumn(name = "course_id", referencedColumnName = "courseId")})
+    private Set<Courses> courses = new HashSet<>();
 }
