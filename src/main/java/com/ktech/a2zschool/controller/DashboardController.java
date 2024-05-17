@@ -16,11 +16,14 @@ public class DashboardController {
     @Autowired
     PersonRepository personRepository;
     @RequestMapping("/dashboard")
-    public String displayDashboard(Model model, Authentication authentication, HttpSession session) {
+    public String displayDashboard(Model model,Authentication authentication, HttpSession session) {
         Person person = personRepository.readByEmail(authentication.getName());
         model.addAttribute("username", person.getName());
         model.addAttribute("roles", authentication.getAuthorities().toString());
-        session.setAttribute("loggedInPerson",person);
+        if(null != person.getSchoolClass() && null != person.getSchoolClass().getName()){
+            model.addAttribute("enrolledClass", person.getSchoolClass().getName());
+        }
+        session.setAttribute("loggedInPerson", person);
         return "dashboard.html";
     }
 }
