@@ -1,7 +1,9 @@
 package com.ktech.a2zschool.controller;
 
+import com.ktech.a2zschool.model.Courses;
 import com.ktech.a2zschool.model.Person;
 import com.ktech.a2zschool.model.SchoolClass;
+import com.ktech.a2zschool.repository.CoursesRepository;
 import com.ktech.a2zschool.repository.PersonRepository;
 import com.ktech.a2zschool.repository.SchoolClassRepository;
 import jakarta.servlet.http.HttpSession;
@@ -24,6 +26,8 @@ public class AdminController {
 
     @Autowired
     PersonRepository personRepository;
+    @Autowired
+    CoursesRepository coursesRepository;
 
     @RequestMapping("/displayClasses")
     public ModelAndView displayClasses(Model model) {
@@ -94,6 +98,23 @@ public class AdminController {
         SchoolClass schoolClassSaved = schoolClassRepository.save(schoolClass);
         session.setAttribute("schoolClass",schoolClassSaved);
         ModelAndView modelAndView = new ModelAndView("redirect:/admin/displayStudents?classId="+schoolClass.getClassId());
+        return modelAndView;
+    }
+
+    @GetMapping("/displayCourses")
+    public ModelAndView displayCourses(Model model) {
+        List<Courses> courses = coursesRepository.findAll();
+        ModelAndView modelAndView = new ModelAndView("courses_secure.html");
+        modelAndView.addObject("courses",courses);
+        modelAndView.addObject("course", new Courses());
+        return modelAndView;
+    }
+
+    @PostMapping("/addNewCourse")
+    public ModelAndView addNewCourse(Model model, @ModelAttribute("course") Courses course) {
+        ModelAndView modelAndView = new ModelAndView();
+        coursesRepository.save(course);
+        modelAndView.setViewName("redirect:/admin/displayCourses");
         return modelAndView;
     }
 }
