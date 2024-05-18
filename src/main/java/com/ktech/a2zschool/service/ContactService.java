@@ -35,14 +35,14 @@ public class ContactService {
         Pageable pageable = PageRequest.of(pageNum - 1, pageSize,
                 sortDir.equals("asc") ? Sort.by(sortField).ascending()
                         : Sort.by(sortField).descending());
-        Page<Contact> msgPage = contactRepository.findOpenMsgs(
+        Page<Contact> msgPage = contactRepository.findOpenMsgsNative(
                 A2ZSchoolContants.OPEN,pageable);
         return msgPage;
     }
 
     public boolean updateMsgStatus(int contactId){
         boolean isUpdated = false;
-        int rows = contactRepository.updateMsgStatus(A2ZSchoolContants.CLOSE,contactId);
+        int rows = contactRepository.updateMsgStatusNative(A2ZSchoolContants.CLOSE,contactId);
         if(rows>0){
             isUpdated=true;
         }
